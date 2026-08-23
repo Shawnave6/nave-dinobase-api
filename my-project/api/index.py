@@ -18,6 +18,7 @@ app.add_middleware(
 # DINOSAUR DATA
 dinosaurs = [
     {
+        "id": 1,
         "name": "Tyrannosaurus Rex",
         "scientific_name": "Tyrannosaurus rex",
         "period": "Cretaceous",
@@ -27,6 +28,7 @@ dinosaurs = [
         "defence": "Powerful jaws and strong bite"
     },
     {
+        "id": 2,
         "name": "Triceratops",
         "scientific_name": "Triceratops horridus",
         "period": "Cretaceous",
@@ -36,6 +38,7 @@ dinosaurs = [
         "defence": "Three horns and a large bony frill"
     },
     {
+        "id": 3,
         "name": "Velociraptor",
         "scientific_name": "Velociraptor mongoliensis",
         "period": "Cretaceous",
@@ -45,6 +48,7 @@ dinosaurs = [
         "defence": "Sharp claws and agile movement"
     },
     {
+        "id": 4,
         "name": "Stegosaurus",
         "scientific_name": "Stegosaurus stenops",
         "period": "Jurassic",
@@ -54,6 +58,7 @@ dinosaurs = [
         "defence": "Spiked tail and protective plates"
     },
     {
+        "id": 5,
         "name": "Brachiosaurus",
         "scientific_name": "Brachiosaurus altithorax",
         "period": "Jurassic",
@@ -63,6 +68,7 @@ dinosaurs = [
         "defence": "Large size and powerful tail"
     },
     {
+        "id": 6,
         "name": "Spinosaurus",
         "scientific_name": "Spinosaurus aegyptiacus",
         "period": "Cretaceous",
@@ -72,6 +78,7 @@ dinosaurs = [
         "defence": "Large size, powerful jaws, and strong claws"
     },
     {
+        "id": 7,
         "name": "Ankylosaurus",
         "scientific_name": "Ankylosaurus magniventris",
         "period": "Cretaceous",
@@ -81,6 +88,7 @@ dinosaurs = [
         "defence": "Armored body and heavy tail club"
     },
     {
+        "id": 8,
         "name": "Allosaurus",
         "scientific_name": "Allosaurus fragilis",
         "period": "Jurassic",
@@ -90,6 +98,7 @@ dinosaurs = [
         "defence": "Sharp teeth, claws, and powerful jaws"
     },
     {
+        "id": 9,
         "name": "Diplodocus",
         "scientific_name": "Diplodocus carnegii",
         "period": "Jurassic",
@@ -99,6 +108,7 @@ dinosaurs = [
         "defence": "Long tail used as a possible whip-like weapon"
     },
     {
+        "id": 10,
         "name": "Parasaurolophus",
         "scientific_name": "Parasaurolophus walkeri",
         "period": "Cretaceous",
@@ -108,6 +118,7 @@ dinosaurs = [
         "defence": "Large body and strong hind legs"
     },
     {
+        "id": 11,
         "name": "Pachycephalosaurus",
         "scientific_name": "Pachycephalosaurus wyomingensis",
         "period": "Cretaceous",
@@ -117,6 +128,7 @@ dinosaurs = [
         "defence": "Thick, dome-shaped skull"
     },
     {
+        "id": 12,
         "name": "Carnotaurus",
         "scientific_name": "Carnotaurus sastrei",
         "period": "Cretaceous",
@@ -126,6 +138,7 @@ dinosaurs = [
         "defence": "Horns, powerful jaws, and muscular body"
     },
     {
+        "id": 13,
         "name": "Iguanodon",
         "scientific_name": "Iguanodon bernissartensis",
         "period": "Cretaceous",
@@ -135,6 +148,7 @@ dinosaurs = [
         "defence": "Large thumb spike"
     },
     {
+        "id": 14,
         "name": "Compsognathus",
         "scientific_name": "Compsognathus longipes",
         "period": "Jurassic",
@@ -144,6 +158,7 @@ dinosaurs = [
         "defence": "Small size and fast movement"
     },
     {
+        "id": 15,
         "name": "Dilophosaurus",
         "scientific_name": "Dilophosaurus wetherilli",
         "period": "Jurassic",
@@ -153,6 +168,7 @@ dinosaurs = [
         "defence": "Powerful jaws and clawed hands"
     },
     {
+        "id": 16,
         "name": "Baryonyx",
         "scientific_name": "Baryonyx walkeri",
         "period": "Cretaceous",
@@ -162,6 +178,7 @@ dinosaurs = [
         "defence": "Large hooked claws and powerful jaws"
     },
     {
+        "id": 17,
         "name": "Giganotosaurus",
         "scientific_name": "Giganotosaurus carolinii",
         "period": "Cretaceous",
@@ -171,6 +188,7 @@ dinosaurs = [
         "defence": "Large size and powerful jaws"
     },
     {
+        "id": 18,
         "name": "Deinonychus",
         "scientific_name": "Deinonychus antirrhopus",
         "period": "Cretaceous",
@@ -180,6 +198,7 @@ dinosaurs = [
         "defence": "Large sickle-shaped toe claw"
     },
     {
+        "id": 19,
         "name": "Apatosaurus",
         "scientific_name": "Apatosaurus louisae",
         "period": "Jurassic",
@@ -189,6 +208,7 @@ dinosaurs = [
         "defence": "Large size and powerful tail"
     },
     {
+        "id": 20,
         "name": "Styracosaurus",
         "scientific_name": "Styracosaurus albertensis",
         "period": "Cretaceous",
