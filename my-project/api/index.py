@@ -242,19 +242,6 @@ def get_dinosaurs():
         "dinosaurs": dinosaurs
     }
 
-
-# GET ONE DINOSAUR
-@app.get("/dinosaurs/{dinosaur_id}")
-def get_dinosaur(dinosaur_id: int):
-    for dino in dinosaurs:
-        if dino["id"] == dinosaur_id:
-            return dino
-
-    raise HTTPException(
-        status_code=404,
-        detail="Dino not found."
-    )
-
 # SEARCH DINOSAURS
 @app.get("/dinosaurs/search")
 def search_dinosaurs( q: str = Query(..., min_length=1)):
@@ -279,3 +266,17 @@ def search_dinosaurs( q: str = Query(..., min_length=1)):
         "count": len(results),
         "results": results
     }
+
+
+# GET ONE DINOSAUR
+@app.get("/dinosaurs/{dinosaur_id}")
+def get_dinosaur(dinosaur_id: int):
+    for dino in dinosaurs:
+        if dino["id"] == dinosaur_id:
+            return dino
+
+    raise HTTPException(
+        status_code=404,
+        detail="Dino not found."
+    )
+
