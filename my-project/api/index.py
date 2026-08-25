@@ -26,6 +26,13 @@ dinosaurs = [
         "family": "Tyrannosauridae",
         "type": "Theropod",
         "defence": "Powerful jaws and strong bite"
+        "location": "Western North America"
+        "discovered": "Barnum Brown"
+        "life_span": "28 to 30 years"
+        "bite_force": "431,000 psi"
+        "weight": "6,000 to 9,000 kg"
+        "height": "12 to 13 ft"
+        "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
         "id": 2,
@@ -36,6 +43,13 @@ dinosaurs = [
         "family": "Ceratopsidae",
         "type": "Ceratopsian",
         "defence": "Three horns and a large bony frill"
+        "location": "Western North America"
+        "discovered": "George Lyman Cannon"
+        "life_span": "30 to 50 years"
+        "bite_force": "8,000-10,000 psi"
+        "weight": "6,000 to 12,000 kg"
+        "height": "10.8 to 12.5 ft"
+        "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
         "id": 3,
@@ -46,6 +60,13 @@ dinosaurs = [
         "family": "Dromaeosauridae",
         "type": "Theropod",
         "defence": "Sharp claws and agile movement"
+        "location": "Gobi Desert and Northern China"
+        "discovered": "Peter Kaisen"
+        "life_span": "15 to 20 years"
+        "bite_force": "1,000 psi"
+        "weight": "14 to 20 kg"
+        "height": "4.9 to 6.8 ft"
+        "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
         "id": 4,
@@ -56,6 +77,13 @@ dinosaurs = [
         "family": "Stegosauridae",
         "type": "Stegosaur",
         "defence": "Spiked tail and protective plates"
+        "location": "Western North America"
+        "discovered": "Othniel Charles Marsh"
+        "life_span": "25 to 30 years"
+        "bite_force": "300 psi"
+        "weight": "2,700 to 4,000 kg"
+        "height": "21 to 30 ft"
+        "extinction": "Late Jurassic faunal turnover"
     },
     {
         "id": 5,
@@ -66,6 +94,13 @@ dinosaurs = [
         "family": "Brachiosauridae",
         "type": "Sauropod",
         "defence": "Large size and powerful tail"
+        "location": "Western North America"
+        "discovered": "Elmer S. Riggs"
+        "life_span": "100 years"
+        "bite_force": "12,800 psi"
+        "weight": "28,300 to 62,000 kilograms"
+        "height": "41 to 49.2 ft"
+        "extinction": "Climate change, Oceanic anoxic events, and Predation"
     },
     {
         "id": 6,
@@ -76,6 +111,13 @@ dinosaurs = [
         "family": "Spinosauridae",
         "type": "Theropod",
         "defence": "Large size, powerful jaws, and strong claws"
+        "location": "North Africa"
+        "discovered": "Ernst Stromer"
+        "life_span": "20 to 30 years"
+        "bite_force": "4,000 to 4,200 psi"
+        "weight": "6,400 to 7,400 kg"
+        "height": "16 to 18 ft"
+        "extinction": "Gradual environmental changes"
     },
     {
         "id": 7,
@@ -86,6 +128,13 @@ dinosaurs = [
         "family": "Ankylosauridae",
         "type": "Ankylosaur",
         "defence": "Armored body and heavy tail club"
+        "location": "Western North America"
+        "discovered": "Barnum Brown"
+        "life_span": "30 to 50 years"
+        "bite_force": "600 to 700 psi"
+        "weight": "4,800 to 8,000 kg"
+        "height": "5.6 to 6.6 ft"
+        "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
         "id": 8,
@@ -96,6 +145,13 @@ dinosaurs = [
         "family": "Allosauridae",
         "type": "Theropod",
         "defence": "Sharp teeth, claws, and powerful jaws"
+        "location": "Western North America"
+        "discovered": "Othniel Charles Marsh"
+        "life_span": "28 years"
+        "bite_force": "2,100 psi"
+        "weight": "1,500 to 2,500 kilograms"
+        "height": "8 to 16 ft"
+        "extinction": "Environmental changes and Faunal turnover"
     },
     {
         "id": 9,
@@ -106,6 +162,13 @@ dinosaurs = [
         "family": "Diplodocidae",
         "type": "Sauropod",
         "defence": "Long tail used as a possible whip-like weapon"
+        "location": "Western United States"
+        "discovered": "Samuel Wendell Williston"
+        "life_span": "40 to 80 years"
+        "bite_force": "250–300 psi"
+        "weight": "10,000 to 16,000 kg"
+        "height": "11.5 to 16.4 ft"
+        "extinction": "Gradual ecological transition"
     },
     {
         "id": 10,
@@ -116,6 +179,13 @@ dinosaurs = [
         "family": "Hadrosauridae",
         "type": "Hadrosaur",
         "defence": "Large body and strong hind legs"
+        "location": "Southwestern United States"
+        "discovered": "William Parks"
+        "life_span": "20 to 30 years"
+        "bite_force": "1,800 psi"
+        "weight": "2,000 to 5,000 kg"
+        "height": "14.4 to 18.4 ft"
+        "extinction": "Uncertain"
     },
     {
         "id": 11,
@@ -126,6 +196,13 @@ dinosaurs = [
         "family": "Pachycephalosauridae",
         "type": "Pachycephalosaur",
         "defence": "Thick, dome-shaped skull"
+        "location": "Western North America"
+        "discovered": "Ferdinand Vandeveer Hayden"
+        "life_span": "20 to 30 years"
+        "bite_force": "250 to 300 psi"
+        "weight": "370 to 500 kg"
+        "height": "6 ft"
+        "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
         "id": 12,
@@ -136,6 +213,13 @@ dinosaurs = [
         "family": "Abelisauridae",
         "type": "Theropod",
         "defence": "Horns, powerful jaws, and muscular body"
+        "location": "South America"
+        "discovered": "José Bonaparte"
+        "life_span": "20 to 30 years"
+        "bite_force": "3,000 to 4,000 psi"
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 13,
@@ -146,6 +230,13 @@ dinosaurs = [
         "family": "Iguanodontidae",
         "type": "Ornithopod",
         "defence": "Large thumb spike"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 14,
@@ -156,6 +247,13 @@ dinosaurs = [
         "family": "Compsognathidae",
         "type": "Theropod",
         "defence": "Small size and fast movement"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 15,
@@ -166,6 +264,13 @@ dinosaurs = [
         "family": "Dilophosauridae",
         "type": "Theropod",
         "defence": "Powerful jaws and clawed hands"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 16,
@@ -176,6 +281,13 @@ dinosaurs = [
         "family": "Spinosauridae",
         "type": "Theropod",
         "defence": "Large hooked claws and powerful jaws"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 17,
@@ -186,6 +298,13 @@ dinosaurs = [
         "family": "Carcharodontosauridae",
         "type": "Theropod",
         "defence": "Large size and powerful jaws"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 18,
@@ -196,6 +315,13 @@ dinosaurs = [
         "family": "Dromaeosauridae",
         "type": "Theropod",
         "defence": "Large sickle-shaped toe claw"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 19,
@@ -206,6 +332,13 @@ dinosaurs = [
         "family": "Diplodocidae",
         "type": "Sauropod",
         "defence": "Large size and powerful tail"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     },
     {
         "id": 20,
@@ -216,6 +349,13 @@ dinosaurs = [
         "family": "Ceratopsidae",
         "type": "Ceratopsian",
         "defence": "Long nose horn and multiple frill spikes"
+        "location":
+        "discovered":
+        "life_span":
+        "bite_force":
+        "weight":
+        "height":
+        "extinction":
     }
 ]
 
