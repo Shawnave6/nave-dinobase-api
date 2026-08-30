@@ -25,13 +25,13 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Tyrannosauridae",
         "type": "Theropod",
-        "defence": "Powerful jaws and strong bite"
-        "location": "Western North America"
-        "discovered": "Barnum Brown"
-        "life_span": "28 to 30 years"
-        "bite_force": "431,000 psi"
-        "weight": "6,000 to 9,000 kg"
-        "height": "12 to 13 ft"
+        "defence": "Powerful jaws and strong bite",
+        "location": "Western North America",
+        "discovered": "Barnum Brown",
+        "life_span": "28 to 33 years",
+        "habitat": "Terrestrial",
+        "weight": "5,000 to 9,000 kg",
+        "height": "12 to 13 ft",
         "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
@@ -42,13 +42,13 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Ceratopsidae",
         "type": "Ceratopsian",
-        "defence": "Three horns and a large bony frill"
-        "location": "Western North America"
-        "discovered": "George Lyman Cannon"
-        "life_span": "30 to 50 years"
-        "bite_force": "8,000-10,000 psi"
-        "weight": "6,000 to 12,000 kg"
-        "height": "10.8 to 12.5 ft"
+        "defence": "Three horns and a large bony frill",
+        "location": "Western North America",
+        "discovered": "George Lyman Cannon",
+        "life_span": "30 to 50 years",
+        "habitat": "Terrestrial",
+        "weight": "5,000 to 9,000 kg",
+        "height": "9.5 to 12.5 ft",
         "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
@@ -59,13 +59,13 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Dromaeosauridae",
         "type": "Theropod",
-        "defence": "Sharp claws and agile movement"
-        "location": "Gobi Desert and Northern China"
-        "discovered": "Peter Kaisen"
-        "life_span": "15 to 20 years"
-        "bite_force": "1,000 psi"
-        "weight": "14 to 20 kg"
-        "height": "4.9 to 6.8 ft"
+        "defence": "Sharp claws and agile movement",
+        "location": "Gobi Desert and Northern China",
+        "discovered": "Peter Kaisen",
+        "life_span": "15 to 20 years",
+        "habitat": "Terrestrial",
+        "weight": "15 to 20 kg",
+        "height": "1.6 to 2 ft",
         "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
@@ -76,13 +76,13 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Stegosauridae",
         "type": "Stegosaur",
-        "defence": "Spiked tail and protective plates"
-        "location": "Western North America"
-        "discovered": "Othniel Charles Marsh"
-        "life_span": "25 to 30 years"
-        "bite_force": "300 psi"
-        "weight": "2,700 to 4,000 kg"
-        "height": "21 to 30 ft"
+        "defence": "Spiked tail and protective plates",
+        "location": "Western North America",
+        "discovered": "Arthur Lakes",
+        "life_span": "25 to 30 years",
+        "habitat": "Terrestrial",
+        "weight": "5,300 to 7,000 kg",
+        "height": "9 ft",
         "extinction": "Late Jurassic faunal turnover"
     },
     {
@@ -93,14 +93,14 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Brachiosauridae",
         "type": "Sauropod",
-        "defence": "Large size and powerful tail"
-        "location": "Western North America"
-        "discovered": "Elmer S. Riggs"
-        "life_span": "100 years"
-        "bite_force": "12,800 psi"
-        "weight": "28,300 to 62,000 kilograms"
-        "height": "41 to 49.2 ft"
-        "extinction": "Climate change, Oceanic anoxic events, and Predation"
+        "defence": "Large size and powerful tail",
+        "location": "Western North America",
+        "discovered": "Elmer S. Riggs",
+        "life_span": "100 years",
+        "habitat": "Terrestrial",
+        "weight": "28,300 to 62,000 kg",
+        "height": "41 to 49.2 ft",
+        "extinction": "Climate change, oceanic anoxic events, and predation"
     },
     {
         "id": 6,
@@ -110,13 +110,13 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Spinosauridae",
         "type": "Theropod",
-        "defence": "Large size, powerful jaws, and strong claws"
-        "location": "North Africa"
-        "discovered": "Ernst Stromer"
-        "life_span": "20 to 30 years"
-        "bite_force": "4,000 to 4,200 psi"
-        "weight": "6,400 to 7,400 kg"
-        "height": "16 to 18 ft"
+        "defence": "Large size, powerful jaws, and strong claws",
+        "location": "North Africa",
+        "discovered": "Richard Markgraf",
+        "life_span": "20 to 30 years",
+        "habitat": "Amphibious",
+        "weight": "6,400 to 7,400 kg",
+        "height": "16 to 18 ft",
         "extinction": "Gradual environmental changes"
     },
     {
@@ -127,13 +127,13 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Ankylosauridae",
         "type": "Ankylosaur",
-        "defence": "Armored body and heavy tail club"
-        "location": "Western North America"
-        "discovered": "Barnum Brown"
-        "life_span": "30 to 50 years"
-        "bite_force": "600 to 700 psi"
-        "weight": "4,800 to 8,000 kg"
-        "height": "5.6 to 6.6 ft"
+        "defence": "Armored body and heavy tail club",
+        "location": "Western North America",
+        "discovered": "Barnum Brown",
+        "life_span": "30 to 50 years",
+        "habitat": "Terrestrial",
+        "weight": "4,800 to 8,000 kg",
+        "height": "5.6 ft",
         "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
@@ -144,14 +144,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Allosauridae",
         "type": "Theropod",
-        "defence": "Sharp teeth, claws, and powerful jaws"
-        "location": "Western North America"
-        "discovered": "Othniel Charles Marsh"
-        "life_span": "28 years"
-        "bite_force": "2,100 psi"
-        "weight": "1,500 to 2,500 kilograms"
-        "height": "8 to 16 ft"
-        "extinction": "Environmental changes and Faunal turnover"
+        "defence": "Sharp teeth, claws, and powerful jaws",
+        "location": "Western North America",
+        "discovered": "Ferdinand Vandeveer Hayden",
+        "life_span": "25 to 30 years",
+        "habitat": "Terrestrial",
+        "weight": "1,500 to 2,300 kg",
+        "height": "9.5 to 16 ft",
+        "extinction": "Environmental changes and faunal turnover"
     },
     {
         "id": 9,
@@ -161,13 +161,13 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Diplodocidae",
         "type": "Sauropod",
-        "defence": "Long tail used as a possible whip-like weapon"
-        "location": "Western United States"
-        "discovered": "Samuel Wendell Williston"
-        "life_span": "40 to 80 years"
-        "bite_force": "250–300 psi"
-        "weight": "10,000 to 16,000 kg"
-        "height": "11.5 to 16.4 ft"
+        "defence": "Long tail used as a possible whip-like weapon",
+        "location": "Western United States",
+        "discovered": "Samuel Wendell Williston",
+        "life_span": "40 to 80 years",
+        "habitat": "Terrestrial",
+        "weight": "10,000 to 16,000 kg",
+        "height": "11.5 to 16.4 ft",
         "extinction": "Gradual ecological transition"
     },
     {
@@ -178,13 +178,13 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Hadrosauridae",
         "type": "Hadrosaur",
-        "defence": "Large body and strong hind legs"
-        "location": "Southwestern United States"
-        "discovered": "William Parks"
-        "life_span": "20 to 30 years"
-        "bite_force": "1,800 psi"
-        "weight": "2,000 to 5,000 kg"
-        "height": "14.4 to 18.4 ft"
+        "defence": "Large body and strong hind legs",
+        "location": "Southwestern United States",
+        "discovered": "William Parks",
+        "life_span": "20 to 30 years",
+        "habitat": "Terrestrial",
+        "weight": "2,500 to 2,700 kg",
+        "height": "9 ft",
         "extinction": "Uncertain"
     },
     {
@@ -195,13 +195,13 @@ dinosaurs = [
         "diet": "Omnivore",
         "family": "Pachycephalosauridae",
         "type": "Pachycephalosaur",
-        "defence": "Thick, dome-shaped skull"
-        "location": "Western North America"
-        "discovered": "Ferdinand Vandeveer Hayden"
-        "life_span": "20 to 30 years"
-        "bite_force": "250 to 300 psi"
-        "weight": "370 to 500 kg"
-        "height": "6 ft"
+        "defence": "Thick, dome-shaped skull",
+        "location": "Western North America",
+        "discovered": "Ferdinand Vandeveer Hayden",
+        "life_span": "20 to 30 years",
+        "habitat": "Terrestrial",
+        "weight": "370 to 500 kg",
+        "height": "6 ft",
         "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
@@ -212,14 +212,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Abelisauridae",
         "type": "Theropod",
-        "defence": "Horns, powerful jaws, and muscular body"
-        "location": "South America"
-        "discovered": "José Bonaparte"
-        "life_span": "20 to 30 years"
-        "bite_force": "3,000 to 4,000 psi"
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Horns, powerful jaws, and muscular body",
+        "location": "South America",
+        "discovered": "Jose Bonaparte",
+        "life_span": "20 to 30 years",
+        "habitat": "Terrestrial",
+        "weight": "1,350 to 2,100 kg",
+        "height": "8 to 10 ft",
+        "extinction": "Cretaceous-Paleogene extinction event"
     },
     {
         "id": 13,
@@ -229,14 +229,14 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Iguanodontidae",
         "type": "Ornithopod",
-        "defence": "Large thumb spike"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Large thumb spike",
+        "location": "Western Europe",
+        "discovered": "Mary Ann Mantell",
+        "life_span": "20 to 25 years",
+        "habitat": "Terrestrial",
+        "weight": "4,500 to 6,000 kg",
+        "height": "9 to 13 ft",
+        "extinction": "Environmental changes and faunal turnover"
     },
     {
         "id": 14,
@@ -246,14 +246,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Compsognathidae",
         "type": "Theropod",
-        "defence": "Small size and fast movement"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Small size and fast movement",
+        "location": "Western Europe",
+        "discovered": "Joseph Oberndorfer",
+        "life_span": "10 to 15 years",
+        "habitat": "Terrestrial",
+        "weight": "0.8 to 3.5 kg",
+        "height": "1 to 2 ft",
+        "extinction": "Late Jurassic faunal turnover"
     },
     {
         "id": 15,
@@ -263,14 +263,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Dilophosauridae",
         "type": "Theropod",
-        "defence": "Powerful jaws and clawed hands"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Powerful jaws and clawed hands",
+        "location": "Western North America",
+        "discovered": "Jesse Williams",
+        "life_span": "20 years",
+        "habitat": "Terrestrial",
+        "weight": "400 to 500 kg",
+        "height": "6 ft",
+        "extinction": "Late Jurassic faunal turnover"
     },
     {
         "id": 16,
@@ -280,14 +280,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Spinosauridae",
         "type": "Theropod",
-        "defence": "Large hooked claws and powerful jaws"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Large hooked claws and powerful jaws",
+        "location": "Western Europe",
+        "discovered": "William Walker",
+        "life_span": "20 to 25 years",
+        "habitat": "Amphibious",
+        "weight": "1,200 to 2,000 kg",
+        "height": "8 to 9 ft",
+        "extinction": "Environmental changes"
     },
     {
         "id": 17,
@@ -297,14 +297,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Carcharodontosauridae",
         "type": "Theropod",
-        "defence": "Large size and powerful jaws"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Large size and powerful jaws",
+        "location": "South America",
+        "discovered": "Ruben Carolini",
+        "life_span": "40 to 60 years",
+        "habitat": "Terrestrial",
+        "weight": "6,500 to 8,000 kg",
+        "height": "13 ft",
+        "extinction": "Environmental changes and faunal turnover"
     },
     {
         "id": 18,
@@ -314,14 +314,14 @@ dinosaurs = [
         "diet": "Carnivore",
         "family": "Dromaeosauridae",
         "type": "Theropod",
-        "defence": "Large sickle-shaped toe claw"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Large sickle-shaped toe claw",
+        "location": "Western North America",
+        "discovered": "John Ostrom",
+        "life_span": "11 to 15 years",
+        "habitat": "Terrestrial",
+        "weight": "60 to 100 kg",
+        "height": "2.5 to 3 ft",
+        "extinction": "Environmental changes"
     },
     {
         "id": 19,
@@ -331,14 +331,14 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Diplodocidae",
         "type": "Sauropod",
-        "defence": "Large size and powerful tail"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Large size and powerful tail",
+        "location": "Western North America",
+        "discovered": "Arthur Lakes",
+        "life_span": "70 to 100 years",
+        "habitat": "Terrestrial",
+        "weight": "16,000 to 22,000 kg",
+        "height": "15 ft",
+        "extinction": "Late Jurassic faunal turnover"
     },
     {
         "id": 20,
@@ -348,14 +348,14 @@ dinosaurs = [
         "diet": "Herbivore",
         "family": "Ceratopsidae",
         "type": "Ceratopsian",
-        "defence": "Long nose horn and multiple frill spikes"
-        "location":
-        "discovered":
-        "life_span":
-        "bite_force":
-        "weight":
-        "height":
-        "extinction":
+        "defence": "Long nose horn and multiple frill spikes",
+        "location": "Western North America",
+        "discovered": "Charles M. Sternberg",
+        "life_span": "20 to 25 years",
+        "habitat": "Terrestrial",
+        "weight": "1,800 to 3,000 kg",
+        "height": "5.5 to 6 ft",
+        "extinction": "Cretaceous-Paleogene extinction event"
     }
 ]
 
