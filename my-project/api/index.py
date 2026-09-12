@@ -383,35 +383,54 @@ dinosaurs = [
     }
 ]
 
+# Validation
 validated_dinosaurs = [PrehistoricCreature(**dino).model_dump() for dino in dinosaurs]
 dinosaurs = validated_dinosaurs
 
-# HOME
-@app.get("/")
-def home():
+# API KEY Authentication
+def verify_api_key(x_api_key: Optional[str] = Header(default=None)):
+    if x_api_key != API_KEY:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or missing API key."
+        )
+    return True
 
+#Health
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "DinoBase API",
+        "version": API_VERSION,
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
+
+# HOME
+@app.get("/api/v1/")
+def home():
     return {
         "message": "Welcome to the DinoBase API!",
         "endpoints": [
-            "/dinosaurs",
-            "/dinosaurs/{id}",
-            "/dinosaurs/search"
+            "/api/v1/dinosaurs",
+            "/api/v1/dinosaurs/{id}",
+            "/api/v1/dinosaurs/search"
         ]
     }
 
 
 # GET ALL DINOSAURS
-@app.get("/dinosaurs")
+@app.get("/api/v1/dinosaurs", dependencies=[Depends(verify_api_key)])
 def get_dinosaurs():
-
     return {
         "count": len(dinosaurs),
         "dinosaurs": dinosaurs
     }
 
-# SEARCH DINOSAURS
-@app.get("/dinosaurs/search")
-def search_dinosaurs( q: str = Query(..., min_length=1)):
+
+# SEARCH DINOSAURS — must stay declared before /dinosaurs/{id}
+@app.get("/api/v1/dinosaurs/search", dependencies=[Depends(verify_api_key)])
+def search_dinosaurs(q: str = Query(..., min_length=1)):
     q = q.lower()
     results = []
     for dino in dinosaurs:
@@ -422,7 +441,7 @@ def search_dinosaurs( q: str = Query(..., min_length=1)):
             f"{dino['diet']} "
             f"{dino['family']} "
             f"{dino['type']} "
-            f"{dino['defence']} "
+            f"{dino['defence']}"
         ).lower()
 
         if q in searchable_text:
@@ -436,7 +455,7 @@ def search_dinosaurs( q: str = Query(..., min_length=1)):
 
 
 # GET ONE DINOSAUR
-@app.get("/dinosaurs/{dinosaur_id}")
+@app.get("/api/v1/dinosaurs/{dinosaur_id}", response_model=PrehistoricCreature, dependencies=[Depends(verify_api_key)])
 def get_dinosaur(dinosaur_id: int):
     for dino in dinosaurs:
         if dino["id"] == dinosaur_id:
@@ -446,4 +465,3 @@ def get_dinosaur(dinosaur_id: int):
         status_code=404,
         detail="Dino not found."
     )
-
