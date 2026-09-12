@@ -1,10 +1,16 @@
 from fastapi import FastAPI, HTTPException, Header, Query
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
+from pydantic import BaseModel, Field
+from typing import Optional, Literal
+
+API_KEY = "student-api-key-123"
+API_VERSION = "1.0"
 
 app = FastAPI(
     title="DinoBase API",
-    description="A beginner-friendly REST API containing information about dinosaurs.",
-    version="1.0.0"
+    description="A beginner-friendly REST API containing information about Prehistoric Animal.",
+    version=API_VERSION,
 )
 
 app.add_middleware(
@@ -14,6 +20,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+#DATA MODEL
+class PrehistoricCreature(BaseModel):
+    id: int
+    name: str = Field(min_length=1)
+    scientific_name: str = Field(min_length=1)
+    period: Literal["Cambrian", "Ordovician", "Silurian", "Devonian", "Carboniferous", "Permian", "Triassic", "Jurassic", "Cretaceous", "Paleogene", "Neogene", "Quaternary"]
+    diet: Literal["Carnivore", "Herbivore", "Omnivore", "Piscivore", "Insectivore", "Filter Feeder"]
+    family: str = Field(min_length=1)
+    type: str = Field(min_length=1)
+    defence: str = Field(min_length=1)
+    location: str = Field(min_length=1)
+    discovered: str = Field(min_length=1)
+    life_span: str = Field(min_length=1)
+    habitat: Literal["Terrestrial", "Amphibious", "Aquatic", "Aerial", "Fossorial", "Arboreal"]
+    weight: str = Field(min_length=1)
+    height: str = Field(min_length=1)
+    extinction: str = Field(min_length=1)
 
 # DINOSAUR DATA
 dinosaurs = [
@@ -359,6 +383,9 @@ dinosaurs = [
     }
 ]
 
+validated_dinosaurs = [PrehistoricCreature(**dino).model_dump() for dino in dinosaurs]
+dinosaurs = validated_dinosaurs
+
 # HOME
 @app.get("/")
 def home():
@@ -394,8 +421,8 @@ def search_dinosaurs( q: str = Query(..., min_length=1)):
             f"{dino['period']} "
             f"{dino['diet']} "
             f"{dino['family']} "
-            f"{dino['type']}"
-            f"{dino['defence']}"
+            f"{dino['type']} "
+            f"{dino['defence']} "
         ).lower()
 
         if q in searchable_text:
