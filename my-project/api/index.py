@@ -4,7 +4,10 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 
-API_KEY = "nave-api-key-110605"
+API_KEYS = {
+    "nave-list-key": "nave-api-list-110605",
+    "nave-rouge-key": "nave-api-cards-101707",
+    "nave-quiz-key": "nave-api-cryptic-112723",
 API_VERSION = "1.0"
 
 app = FastAPI(
@@ -387,9 +390,8 @@ dinosaurs = [
 validated_dinosaurs = [PrehistoricCreature(**dino).model_dump() for dino in dinosaurs]
 dinosaurs = validated_dinosaurs
 
-# API KEY Authentication
 def verify_api_key(x_api_key: Optional[str] = Header(default=None)):
-    if x_api_key != API_KEY:
+    if x_api_key not in API_KEYS:
         raise HTTPException(
             status_code=401,
             detail="Invalid or missing API key."
