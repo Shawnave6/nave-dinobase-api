@@ -5,9 +5,9 @@ from pydantic import BaseModel, Field
 from typing import Optional, Literal
 
 API_KEYS = {
-    "nave-list-key": "nave-api-codex-110605",
-    "nave-rouge-key": "nave-api-card-101707",
-    "nave-quiz-key": "nave-api-crptic-112723",
+    "nave-api-codex-110605": "nave-list-key",
+    "nave-api-card-101707": "nave-rouge-key",
+    "nave-api-crptic-112723": "nave-quiz-key",
 }
 
 API_VERSION = "1.0"
