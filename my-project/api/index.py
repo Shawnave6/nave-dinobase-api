@@ -419,7 +419,7 @@ def database_health():
             pass
         return {"status": "ok", "database": "connected"}
     except Exception as e:
-        return {"status": "error", "detail": type(e).__name__}
+        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
 
 # HOME
 @app.get("/api/v1/")
