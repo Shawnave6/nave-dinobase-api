@@ -410,6 +410,16 @@ def health_check():
         "version": API_VERSION,
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }
+    
+@app.get("/health/db")
+def database_health():
+    try:
+        from db import connect
+        with connect():
+            pass
+        return {"status": "ok", "database": "connected"}
+    except Exception as e:
+        return {"status": "error", "detail": type(e).__name__}
 
 # HOME
 @app.get("/api/v1/")
