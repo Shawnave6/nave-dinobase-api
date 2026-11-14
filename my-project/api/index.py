@@ -426,6 +426,18 @@ def database_health():
     except Exception as e:
         return {"status": "error", "detail": type(e).__name__, "message": str(e)}
 
+@app.get("/health/db/query")
+def database_query():
+    try:
+        from db import connect
+        with connect() as conn:
+            row = conn.execute(
+                "SELECT current_database() AS database, current_user AS connected_as, count(*) AS row_count FROM prehis_creat"
+            ).fetchone()
+        return {"status": "ok", **row}
+    except Exception as e:
+        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
+
 # HOME
 @app.get("/api/v1/")
 def home():
