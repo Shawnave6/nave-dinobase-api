@@ -438,6 +438,19 @@ def database_query():
     except Exception as e:
         return {"status": "error", "detail": type(e).__name__, "message": str(e)}
 
+@app.get("/health/db/records")
+def database_records():
+    try:
+        from db import connect
+        with connect() as conn:
+            count = conn.execute("SELECT count(*) AS n FROM prehis_creat").fetchone()["n"]
+            rows = conn.execute(
+                "SELECT id, name, period, diet FROM prehis_creat ORDER BY id LIMIT 5"
+            ).fetchall()
+        return {"status": "ok", "row_count": count, "first_five": rows}
+    except Exception as e:
+        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
+
 # HOME
 @app.get("/api/v1/")
 def home():
