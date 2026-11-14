@@ -4,6 +4,11 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
 
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 API_KEYS = {
     "nave-api-codex-110605": "nave-list-key",
     "nave-api-card-101707": "nave-rouge-key",
