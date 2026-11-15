@@ -1,21 +1,29 @@
-from fastapi import FastAPI, HTTPException, Header, Query, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
-from pydantic import BaseModel, Field
-from typing import Optional, Literal
-
 import os
+import secrets
 import sys
+from datetime import datetime, timezone
+from typing import Literal, Optional
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+import psycopg
+from fastapi import Depends, FastAPI, HTTPException, Query, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.security import APIKeyHeader
+from pydantic import BaseModel, ConfigDict, Field
+
+import crud
+from db import get_conn
+
+API_VERSION = "1.0"
+
 
 API_KEYS = {
     "nave-api-codex-110605": "nave-list-key",
     "nave-api-card-101707": "nave-rouge-key",
     "nave-api-crptic-112723": "nave-quiz-key",
 }
-
-API_VERSION = "1.0"
 
 app = FastAPI(
     title="DinoBase API",
@@ -31,425 +39,124 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#DATA MODEL
-class PrehistoricCreature(BaseModel):
+Period = Literal["Cambrian", "Ordovician", "Silurian", "Devonian", "Carboniferous", "Permian", "Triassic", "Jurassic", "Cretaceous", "Paleogene", "Neogene", "Quaternary"]
+Diet = Literal["Carnivore", "Herbivore", "Omnivore", "Piscivore", "Insectivore", "Filter Feeder"]
+Habitat = Literal["Terrestrial", "Amphibious", "Aquatic", "Aerial", "Fossorial", "Arboreal"]
+
+
+# DATA MODELS
+class CreatureIn(BaseModel):
+    """Body for creating a record. Every field is required."""
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    name: str = Field(min_length=1, max_length=100)
+    scientific_name: str = Field(min_length=1, max_length=150)
+    period: Period
+    diet: Diet
+    family: str = Field(min_length=1, max_length=100)
+    type: str = Field(min_length=1, max_length=50)
+    defence: str = Field(min_length=1, max_length=255)
+    location: str = Field(min_length=1, max_length=150)
+    discovered: str = Field(min_length=1, max_length=150)
+    life_span: str = Field(min_length=1, max_length=50)
+    habitat: Habitat
+    weight: str = Field(min_length=1, max_length=50)
+    height: str = Field(min_length=1, max_length=50)
+    extinction: str = Field(min_length=1, max_length=255)
+
+
+class PrehistoricCreature(CreatureIn):
     id: int
-    name: str = Field(min_length=1)
-    scientific_name: str = Field(min_length=1)
-    period: Literal["Cambrian", "Ordovician", "Silurian", "Devonian", "Carboniferous", "Permian", "Triassic", "Jurassic", "Cretaceous", "Paleogene", "Neogene", "Quaternary"]
-    diet: Literal["Carnivore", "Herbivore", "Omnivore", "Piscivore", "Insectivore", "Filter Feeder"]
-    family: str = Field(min_length=1)
-    type: str = Field(min_length=1)
-    defence: str = Field(min_length=1)
-    location: str = Field(min_length=1)
-    discovered: str = Field(min_length=1)
-    life_span: str = Field(min_length=1)
-    habitat: Literal["Terrestrial", "Amphibious", "Aquatic", "Aerial", "Fossorial", "Arboreal"]
-    weight: str = Field(min_length=1)
-    height: str = Field(min_length=1)
-    extinction: str = Field(min_length=1)
 
-# DINOSAUR DATA
-dinosaurs = [
-    {
-        "id": 1,
-        "name": "Tyrannosaurus Rex",
-        "scientific_name": "Tyrannosaurus rex",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Tyrannosauridae",
-        "type": "Theropod",
-        "defence": "Powerful jaws and strong bite",
-        "location": "Western North America",
-        "discovered": "Barnum Brown",
-        "life_span": "28 to 33 years",
-        "habitat": "Terrestrial",
-        "weight": "5,000 to 9,000 kg",
-        "height": "12 to 13 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    },
-    {
-        "id": 2,
-        "name": "Triceratops",
-        "scientific_name": "Triceratops horridus",
-        "period": "Cretaceous",
-        "diet": "Herbivore",
-        "family": "Ceratopsidae",
-        "type": "Ceratopsian",
-        "defence": "Three horns and a large bony frill",
-        "location": "Western North America",
-        "discovered": "George Lyman Cannon",
-        "life_span": "30 to 50 years",
-        "habitat": "Terrestrial",
-        "weight": "5,000 to 9,000 kg",
-        "height": "9.5 to 12.5 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    },
-    {
-        "id": 3,
-        "name": "Velociraptor",
-        "scientific_name": "Velociraptor mongoliensis",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Dromaeosauridae",
-        "type": "Theropod",
-        "defence": "Sharp claws and agile movement",
-        "location": "Gobi Desert and Northern China",
-        "discovered": "Peter Kaisen",
-        "life_span": "15 to 20 years",
-        "habitat": "Terrestrial",
-        "weight": "15 to 20 kg",
-        "height": "1.6 to 2 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    },
-    {
-        "id": 4,
-        "name": "Stegosaurus",
-        "scientific_name": "Stegosaurus stenops",
-        "period": "Jurassic",
-        "diet": "Herbivore",
-        "family": "Stegosauridae",
-        "type": "Stegosaur",
-        "defence": "Spiked tail and protective plates",
-        "location": "Western North America",
-        "discovered": "Arthur Lakes",
-        "life_span": "25 to 30 years",
-        "habitat": "Terrestrial",
-        "weight": "5,300 to 7,000 kg",
-        "height": "9 ft",
-        "extinction": "Late Jurassic faunal turnover"
-    },
-    {
-        "id": 5,
-        "name": "Brachiosaurus",
-        "scientific_name": "Brachiosaurus altithorax",
-        "period": "Jurassic",
-        "diet": "Herbivore",
-        "family": "Brachiosauridae",
-        "type": "Sauropod",
-        "defence": "Large size and powerful tail",
-        "location": "Western North America",
-        "discovered": "Elmer S. Riggs",
-        "life_span": "100 years",
-        "habitat": "Terrestrial",
-        "weight": "28,300 to 62,000 kg",
-        "height": "41 to 49.2 ft",
-        "extinction": "Climate change, oceanic anoxic events, and predation"
-    },
-    {
-        "id": 6,
-        "name": "Spinosaurus",
-        "scientific_name": "Spinosaurus aegyptiacus",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Spinosauridae",
-        "type": "Theropod",
-        "defence": "Large size, powerful jaws, and strong claws",
-        "location": "North Africa",
-        "discovered": "Richard Markgraf",
-        "life_span": "20 to 30 years",
-        "habitat": "Amphibious",
-        "weight": "6,400 to 7,400 kg",
-        "height": "16 to 18 ft",
-        "extinction": "Gradual environmental changes"
-    },
-    {
-        "id": 7,
-        "name": "Ankylosaurus",
-        "scientific_name": "Ankylosaurus magniventris",
-        "period": "Cretaceous",
-        "diet": "Herbivore",
-        "family": "Ankylosauridae",
-        "type": "Ankylosaur",
-        "defence": "Armored body and heavy tail club",
-        "location": "Western North America",
-        "discovered": "Barnum Brown",
-        "life_span": "30 to 50 years",
-        "habitat": "Terrestrial",
-        "weight": "4,800 to 8,000 kg",
-        "height": "5.6 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    },
-    {
-        "id": 8,
-        "name": "Allosaurus",
-        "scientific_name": "Allosaurus fragilis",
-        "period": "Jurassic",
-        "diet": "Carnivore",
-        "family": "Allosauridae",
-        "type": "Theropod",
-        "defence": "Sharp teeth, claws, and powerful jaws",
-        "location": "Western North America",
-        "discovered": "Ferdinand Vandeveer Hayden",
-        "life_span": "25 to 30 years",
-        "habitat": "Terrestrial",
-        "weight": "1,500 to 2,300 kg",
-        "height": "9.5 to 16 ft",
-        "extinction": "Environmental changes and faunal turnover"
-    },
-    {
-        "id": 9,
-        "name": "Diplodocus",
-        "scientific_name": "Diplodocus carnegii",
-        "period": "Jurassic",
-        "diet": "Herbivore",
-        "family": "Diplodocidae",
-        "type": "Sauropod",
-        "defence": "Long tail used as a possible whip-like weapon",
-        "location": "Western United States",
-        "discovered": "Samuel Wendell Williston",
-        "life_span": "40 to 80 years",
-        "habitat": "Terrestrial",
-        "weight": "10,000 to 16,000 kg",
-        "height": "11.5 to 16.4 ft",
-        "extinction": "Gradual ecological transition"
-    },
-    {
-        "id": 10,
-        "name": "Parasaurolophus",
-        "scientific_name": "Parasaurolophus walkeri",
-        "period": "Cretaceous",
-        "diet": "Herbivore",
-        "family": "Hadrosauridae",
-        "type": "Hadrosaur",
-        "defence": "Large body and strong hind legs",
-        "location": "Southwestern United States",
-        "discovered": "William Parks",
-        "life_span": "20 to 30 years",
-        "habitat": "Terrestrial",
-        "weight": "2,500 to 2,700 kg",
-        "height": "9 ft",
-        "extinction": "Uncertain"
-    },
-    {
-        "id": 11,
-        "name": "Pachycephalosaurus",
-        "scientific_name": "Pachycephalosaurus wyomingensis",
-        "period": "Cretaceous",
-        "diet": "Omnivore",
-        "family": "Pachycephalosauridae",
-        "type": "Pachycephalosaur",
-        "defence": "Thick, dome-shaped skull",
-        "location": "Western North America",
-        "discovered": "Ferdinand Vandeveer Hayden",
-        "life_span": "20 to 30 years",
-        "habitat": "Terrestrial",
-        "weight": "370 to 500 kg",
-        "height": "6 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    },
-    {
-        "id": 12,
-        "name": "Carnotaurus",
-        "scientific_name": "Carnotaurus sastrei",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Abelisauridae",
-        "type": "Theropod",
-        "defence": "Horns, powerful jaws, and muscular body",
-        "location": "South America",
-        "discovered": "Jose Bonaparte",
-        "life_span": "20 to 30 years",
-        "habitat": "Terrestrial",
-        "weight": "1,350 to 2,100 kg",
-        "height": "8 to 10 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    },
-    {
-        "id": 13,
-        "name": "Iguanodon",
-        "scientific_name": "Iguanodon bernissartensis",
-        "period": "Cretaceous",
-        "diet": "Herbivore",
-        "family": "Iguanodontidae",
-        "type": "Ornithopod",
-        "defence": "Large thumb spike",
-        "location": "Western Europe",
-        "discovered": "Mary Ann Mantell",
-        "life_span": "20 to 25 years",
-        "habitat": "Terrestrial",
-        "weight": "4,500 to 6,000 kg",
-        "height": "9 to 13 ft",
-        "extinction": "Environmental changes and faunal turnover"
-    },
-    {
-        "id": 14,
-        "name": "Compsognathus",
-        "scientific_name": "Compsognathus longipes",
-        "period": "Jurassic",
-        "diet": "Carnivore",
-        "family": "Compsognathidae",
-        "type": "Theropod",
-        "defence": "Small size and fast movement",
-        "location": "Western Europe",
-        "discovered": "Joseph Oberndorfer",
-        "life_span": "10 to 15 years",
-        "habitat": "Terrestrial",
-        "weight": "0.8 to 3.5 kg",
-        "height": "1 to 2 ft",
-        "extinction": "Late Jurassic faunal turnover"
-    },
-    {
-        "id": 15,
-        "name": "Dilophosaurus",
-        "scientific_name": "Dilophosaurus wetherilli",
-        "period": "Jurassic",
-        "diet": "Carnivore",
-        "family": "Dilophosauridae",
-        "type": "Theropod",
-        "defence": "Powerful jaws and clawed hands",
-        "location": "Western North America",
-        "discovered": "Jesse Williams",
-        "life_span": "20 years",
-        "habitat": "Terrestrial",
-        "weight": "400 to 500 kg",
-        "height": "6 ft",
-        "extinction": "Late Jurassic faunal turnover"
-    },
-    {
-        "id": 16,
-        "name": "Baryonyx",
-        "scientific_name": "Baryonyx walkeri",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Spinosauridae",
-        "type": "Theropod",
-        "defence": "Large hooked claws and powerful jaws",
-        "location": "Western Europe",
-        "discovered": "William Walker",
-        "life_span": "20 to 25 years",
-        "habitat": "Amphibious",
-        "weight": "1,200 to 2,000 kg",
-        "height": "8 to 9 ft",
-        "extinction": "Environmental changes"
-    },
-    {
-        "id": 17,
-        "name": "Giganotosaurus",
-        "scientific_name": "Giganotosaurus carolinii",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Carcharodontosauridae",
-        "type": "Theropod",
-        "defence": "Large size and powerful jaws",
-        "location": "South America",
-        "discovered": "Ruben Carolini",
-        "life_span": "40 to 60 years",
-        "habitat": "Terrestrial",
-        "weight": "6,500 to 8,000 kg",
-        "height": "13 ft",
-        "extinction": "Environmental changes and faunal turnover"
-    },
-    {
-        "id": 18,
-        "name": "Deinonychus",
-        "scientific_name": "Deinonychus antirrhopus",
-        "period": "Cretaceous",
-        "diet": "Carnivore",
-        "family": "Dromaeosauridae",
-        "type": "Theropod",
-        "defence": "Large sickle-shaped toe claw",
-        "location": "Western North America",
-        "discovered": "John Ostrom",
-        "life_span": "11 to 15 years",
-        "habitat": "Terrestrial",
-        "weight": "60 to 100 kg",
-        "height": "2.5 to 3 ft",
-        "extinction": "Environmental changes"
-    },
-    {
-        "id": 19,
-        "name": "Apatosaurus",
-        "scientific_name": "Apatosaurus louisae",
-        "period": "Jurassic",
-        "diet": "Herbivore",
-        "family": "Diplodocidae",
-        "type": "Sauropod",
-        "defence": "Large size and powerful tail",
-        "location": "Western North America",
-        "discovered": "Arthur Lakes",
-        "life_span": "70 to 100 years",
-        "habitat": "Terrestrial",
-        "weight": "16,000 to 22,000 kg",
-        "height": "15 ft",
-        "extinction": "Late Jurassic faunal turnover"
-    },
-    {
-        "id": 20,
-        "name": "Styracosaurus",
-        "scientific_name": "Styracosaurus albertensis",
-        "period": "Cretaceous",
-        "diet": "Herbivore",
-        "family": "Ceratopsidae",
-        "type": "Ceratopsian",
-        "defence": "Long nose horn and multiple frill spikes",
-        "location": "Western North America",
-        "discovered": "Charles M. Sternberg",
-        "life_span": "20 to 25 years",
-        "habitat": "Terrestrial",
-        "weight": "1,800 to 3,000 kg",
-        "height": "5.5 to 6 ft",
-        "extinction": "Cretaceous-Paleogene extinction event"
-    }
-]
 
-# Validation
-validated_dinosaurs = [PrehistoricCreature(**dino).model_dump() for dino in dinosaurs]
-dinosaurs = validated_dinosaurs
+class CreatureUpdate(BaseModel):
+    """Body for a partial update. Send only the fields you want to change."""
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
-# API KEY Authentication
-def verify_api_key(x_api_key: Optional[str] = Header(default=None)):
-    if x_api_key not in API_KEYS:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid or missing API key."
-        )
-    return True
+    name: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    scientific_name: Optional[str] = Field(default=None, min_length=1, max_length=150)
+    period: Optional[Period] = None
+    diet: Optional[Diet] = None
+    family: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    type: Optional[str] = Field(default=None, min_length=1, max_length=50)
+    defence: Optional[str] = Field(default=None, min_length=1, max_length=255)
+    location: Optional[str] = Field(default=None, min_length=1, max_length=150)
+    discovered: Optional[str] = Field(default=None, min_length=1, max_length=150)
+    life_span: Optional[str] = Field(default=None, min_length=1, max_length=50)
+    habitat: Optional[Habitat] = None
+    weight: Optional[str] = Field(default=None, min_length=1, max_length=50)
+    height: Optional[str] = Field(default=None, min_length=1, max_length=50)
+    extinction: Optional[str] = Field(default=None, min_length=1, max_length=255)
 
-#Health
+
+# AUTHENTICATION
+api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
+
+
+def _same(a: str, b: str) -> bool:
+    return secrets.compare_digest(a.encode(), b.encode())
+
+
+def get_key_role(x_api_key: Optional[str] = Depends(api_key_header)) -> str:
+    admin_key = os.environ.get("ADMIN_API_KEY", "")
+    if x_api_key and admin_key and _same(x_api_key, admin_key):
+        return "admin"
+    if x_api_key and any(_same(x_api_key, key) for key in API_KEYS):
+        return "read"
+    raise HTTPException(status_code=401, detail="Invalid or missing API key.")
+
+
+def require_read(role: str = Depends(get_key_role)) -> str:
+    return role
+
+
+def require_admin(role: str = Depends(get_key_role)) -> str:
+    if role != "admin":
+        raise HTTPException(status_code=403, detail="Admin key required.")
+    return role
+
+
+# ERROR HANDLING 
+@app.exception_handler(psycopg.OperationalError)
+def database_unavailable(request, exc):
+    return JSONResponse(status_code=503, content={"detail": "Database unavailable."})
+
+
+@app.exception_handler(psycopg.Error)
+def database_error(request, exc):
+    return JSONResponse(status_code=500, content={"detail": "Database error."})
+
+
+def run_write(conn, action):
+    """Run a write, commit it, and turn database rule violations into clean errors."""
+    try:
+        result = action()
+        conn.commit()
+        return result
+    except psycopg.errors.UniqueViolation:
+        conn.rollback()
+        raise HTTPException(status_code=409, detail="A dinosaur with that name or scientific name already exists.")
+    except psycopg.errors.CheckViolation:
+        conn.rollback()
+        raise HTTPException(status_code=422, detail="Data breaks a database rule.")
+
+
+# HEALTH
 @app.get("/health")
 def health_check():
     return {
         "status": "ok",
         "service": "DinoBase API",
         "version": API_VERSION,
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
-    
+
+
 @app.get("/health/db")
-def database_health():
-    try:
-        from db import connect
-        with connect():
-            pass
-        return {"status": "ok", "database": "connected"}
-    except Exception as e:
-        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
+def database_health(conn=Depends(get_conn)):
+    conn.execute("SELECT 1")
+    return {"status": "ok", "database": "connected"}
 
-@app.get("/health/db/query")
-def database_query():
-    try:
-        from db import connect
-        with connect() as conn:
-            row = conn.execute(
-                "SELECT current_database() AS database, current_user AS connected_as, count(*) AS row_count FROM prehis_creat"
-            ).fetchone()
-        return {"status": "ok", **row}
-    except Exception as e:
-        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
-
-@app.get("/health/db/records")
-def database_records():
-    try:
-        from db import connect
-        with connect() as conn:
-            count = conn.execute("SELECT count(*) AS n FROM prehis_creat").fetchone()["n"]
-            rows = conn.execute(
-                "SELECT id, name, period, diet FROM prehis_creat ORDER BY id LIMIT 5"
-            ).fetchall()
-        return {"status": "ok", "row_count": count, "first_five": rows}
-    except Exception as e:
-        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
 
 # HOME
 @app.get("/api/v1/")
@@ -459,54 +166,65 @@ def home():
         "endpoints": [
             "/api/v1/dinosaurs",
             "/api/v1/dinosaurs/{id}",
-            "/api/v1/dinosaurs/search"
-        ]
+            "/api/v1/dinosaurs/search",
+        ],
     }
 
 
-# GET ALL DINOSAURS
-@app.get("/api/v1/dinosaurs", dependencies=[Depends(verify_api_key)])
-def get_dinosaurs():
-    return {
-        "count": len(dinosaurs),
-        "dinosaurs": dinosaurs
-    }
+# LIST ALL
+@app.get("/api/v1/dinosaurs", dependencies=[Depends(require_read)])
+def get_dinosaurs(
+    period: Optional[Period] = None,
+    diet: Optional[Diet] = None,
+    habitat: Optional[Habitat] = None,
+    conn=Depends(get_conn),
+):
+    rows = crud.list_creatures(conn, {"period": period, "diet": diet, "habitat": habitat})
+    return {"count": len(rows), "dinosaurs": rows}
 
 
-# SEARCH DINOSAURS — must stay declared before /dinosaurs/{id}
-@app.get("/api/v1/dinosaurs/search", dependencies=[Depends(verify_api_key)])
-def search_dinosaurs(q: str = Query(..., min_length=1)):
-    q = q.lower()
-    results = []
-    for dino in dinosaurs:
-        searchable_text = (
-            f"{dino['name']} "
-            f"{dino['scientific_name']} "
-            f"{dino['period']} "
-            f"{dino['diet']} "
-            f"{dino['family']} "
-            f"{dino['type']} "
-            f"{dino['defence']}"
-        ).lower()
-
-        if q in searchable_text:
-            results.append(dino)
-
-    return {
-        "query": q,
-        "count": len(results),
-        "results": results
-    }
+# SEARCH ONE
+@app.get("/api/v1/dinosaurs/search", dependencies=[Depends(require_read)])
+def search_dinosaurs(q: str = Query(..., min_length=1), conn=Depends(get_conn)):
+    rows = crud.search_creatures(conn, q)
+    return {"query": q.lower(), "count": len(rows), "results": rows}
 
 
-# GET ONE DINOSAUR
-@app.get("/api/v1/dinosaurs/{dinosaur_id}", response_model=PrehistoricCreature, dependencies=[Depends(verify_api_key)])
-def get_dinosaur(dinosaur_id: int):
-    for dino in dinosaurs:
-        if dino["id"] == dinosaur_id:
-            return dino
+# READ: 
+@app.get("/api/v1/dinosaurs/{dinosaur_id}", response_model=PrehistoricCreature, dependencies=[Depends(require_read)])
+def get_dinosaur(dinosaur_id: int, conn=Depends(get_conn)):
+    row = crud.get_creature(conn, dinosaur_id)
+    if row is None:
+        raise HTTPException(status_code=404, detail="Dino not found.")
+    return row
 
-    raise HTTPException(
-        status_code=404,
-        detail="Dino not found."
-    )
+
+# CREATE
+@app.post("/api/v1/dinosaurs", response_model=PrehistoricCreature, status_code=201, dependencies=[Depends(require_admin)])
+def create_dinosaur(creature: CreatureIn, response: Response, conn=Depends(get_conn)):
+    row = run_write(conn, lambda: crud.create_creature(conn, creature.model_dump()))
+    response.headers["Location"] = f"/api/v1/dinosaurs/{row['id']}"
+    return row
+
+
+# UPDATE 
+@app.patch("/api/v1/dinosaurs/{dinosaur_id}", response_model=PrehistoricCreature, dependencies=[Depends(require_admin)])
+def update_dinosaur(dinosaur_id: int, changes: CreatureUpdate, conn=Depends(get_conn)):
+    data = changes.model_dump(exclude_unset=True)
+    if not data:
+        raise HTTPException(status_code=422, detail="Provide at least one field to update.")
+    if any(value is None for value in data.values()):
+        raise HTTPException(status_code=422, detail="Fields cannot be null.")
+    row = run_write(conn, lambda: crud.update_creature(conn, dinosaur_id, data))
+    if row is None:
+        raise HTTPException(status_code=404, detail="Dino not found.")
+    return row
+
+
+# DELETE
+@app.delete("/api/v1/dinosaurs/{dinosaur_id}", status_code=204, dependencies=[Depends(require_admin)])
+def delete_dinosaur(dinosaur_id: int, conn=Depends(get_conn)):
+    deleted = run_write(conn, lambda: crud.delete_creature(conn, dinosaur_id))
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Dino not found.")
+    return Response(status_code=204)
