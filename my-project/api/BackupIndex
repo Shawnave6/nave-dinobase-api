@@ -1,10 +1,26 @@
-from fastapi import FastAPI, HTTPException, Header, Query
+from fastapi import FastAPI, HTTPException, Header, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
+from pydantic import BaseModel, Field
+from typing import Optional, Literal
+
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+API_KEYS = {
+    "nave-api-codex-110605": "nave-list-key",
+    "nave-api-card-101707": "nave-rouge-key",
+    "nave-api-crptic-112723": "nave-quiz-key",
+}
+
+API_VERSION = "1.0"
 
 app = FastAPI(
     title="DinoBase API",
-    description="A beginner-friendly REST API containing information about dinosaurs.",
-    version="1.0.0"
+    description="A beginner-friendly REST API containing information about Prehistoric Animal.",
+    version=API_VERSION,
 )
 
 app.add_middleware(
@@ -14,6 +30,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+#DATA MODEL
+class PrehistoricCreature(BaseModel):
+    id: int
+    name: str = Field(min_length=1)
+    scientific_name: str = Field(min_length=1)
+    period: Literal["Cambrian", "Ordovician", "Silurian", "Devonian", "Carboniferous", "Permian", "Triassic", "Jurassic", "Cretaceous", "Paleogene", "Neogene", "Quaternary"]
+    diet: Literal["Carnivore", "Herbivore", "Omnivore", "Piscivore", "Insectivore", "Filter Feeder"]
+    family: str = Field(min_length=1)
+    type: str = Field(min_length=1)
+    defence: str = Field(min_length=1)
+    location: str = Field(min_length=1)
+    discovered: str = Field(min_length=1)
+    life_span: str = Field(min_length=1)
+    habitat: Literal["Terrestrial", "Amphibious", "Aquatic", "Aerial", "Fossorial", "Arboreal"]
+    weight: str = Field(min_length=1)
+    height: str = Field(min_length=1)
+    extinction: str = Field(min_length=1)
 
 # DINOSAUR DATA
 dinosaurs = [
@@ -359,32 +393,89 @@ dinosaurs = [
     }
 ]
 
-# HOME
-@app.get("/")
-def home():
+# Validation
+validated_dinosaurs = [PrehistoricCreature(**dino).model_dump() for dino in dinosaurs]
+dinosaurs = validated_dinosaurs
 
+# API KEY Authentication
+def verify_api_key(x_api_key: Optional[str] = Header(default=None)):
+    if x_api_key not in API_KEYS:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or missing API key."
+        )
+    return True
+
+#Health
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "DinoBase API",
+        "version": API_VERSION,
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
+    
+@app.get("/health/db")
+def database_health():
+    try:
+        from db import connect
+        with connect():
+            pass
+        return {"status": "ok", "database": "connected"}
+    except Exception as e:
+        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
+
+@app.get("/health/db/query")
+def database_query():
+    try:
+        from db import connect
+        with connect() as conn:
+            row = conn.execute(
+                "SELECT current_database() AS database, current_user AS connected_as, count(*) AS row_count FROM prehis_creat"
+            ).fetchone()
+        return {"status": "ok", **row}
+    except Exception as e:
+        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
+
+@app.get("/health/db/records")
+def database_records():
+    try:
+        from db import connect
+        with connect() as conn:
+            count = conn.execute("SELECT count(*) AS n FROM prehis_creat").fetchone()["n"]
+            rows = conn.execute(
+                "SELECT id, name, period, diet FROM prehis_creat ORDER BY id LIMIT 5"
+            ).fetchall()
+        return {"status": "ok", "row_count": count, "first_five": rows}
+    except Exception as e:
+        return {"status": "error", "detail": type(e).__name__, "message": str(e)}
+
+# HOME
+@app.get("/api/v1/")
+def home():
     return {
         "message": "Welcome to the DinoBase API!",
         "endpoints": [
-            "/dinosaurs",
-            "/dinosaurs/{id}",
-            "/dinosaurs/search"
+            "/api/v1/dinosaurs",
+            "/api/v1/dinosaurs/{id}",
+            "/api/v1/dinosaurs/search"
         ]
     }
 
 
 # GET ALL DINOSAURS
-@app.get("/dinosaurs")
+@app.get("/api/v1/dinosaurs", dependencies=[Depends(verify_api_key)])
 def get_dinosaurs():
-
     return {
         "count": len(dinosaurs),
         "dinosaurs": dinosaurs
     }
 
-# SEARCH DINOSAURS
-@app.get("/dinosaurs/search")
-def search_dinosaurs( q: str = Query(..., min_length=1)):
+
+# SEARCH DINOSAURS — must stay declared before /dinosaurs/{id}
+@app.get("/api/v1/dinosaurs/search", dependencies=[Depends(verify_api_key)])
+def search_dinosaurs(q: str = Query(..., min_length=1)):
     q = q.lower()
     results = []
     for dino in dinosaurs:
@@ -394,7 +485,7 @@ def search_dinosaurs( q: str = Query(..., min_length=1)):
             f"{dino['period']} "
             f"{dino['diet']} "
             f"{dino['family']} "
-            f"{dino['type']}"
+            f"{dino['type']} "
             f"{dino['defence']}"
         ).lower()
 
@@ -409,7 +500,7 @@ def search_dinosaurs( q: str = Query(..., min_length=1)):
 
 
 # GET ONE DINOSAUR
-@app.get("/dinosaurs/{dinosaur_id}")
+@app.get("/api/v1/dinosaurs/{dinosaur_id}", response_model=PrehistoricCreature, dependencies=[Depends(verify_api_key)])
 def get_dinosaur(dinosaur_id: int):
     for dino in dinosaurs:
         if dino["id"] == dinosaur_id:
