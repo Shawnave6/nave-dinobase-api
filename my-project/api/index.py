@@ -124,6 +124,28 @@ def verify_admin_key(x_api_key: Optional[str] = Header(default=None)):
         detail="Invalid or missing API key."
     )
 
+#Error Handling 
+@app.exception_handler(psycopg.OperationalError)
+def database_unavailable(request, exc):
+    return JSONResponse(
+        status_code=503,
+        content={"detail": "Database temporarily unavailable. Please try again later."}
+    )
+
+@app.exception_handler(psycopg.Error)
+def database_error(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "A database error occurred."}
+    )
+
+@app.exception_handler(Exception)
+def unexpected_error(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error."}
+    )
+
 #Health
 @app.get("/health")
 def health_check():
