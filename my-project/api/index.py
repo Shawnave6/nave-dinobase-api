@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import crud
 
-API_KEYS = {key.strip() for key in os.environ.get("READ_API_KEYS", "").split(",") if key.strip()}
+API_KEYS = {key.strip() for key in os.environ.get("WEB_API_KEYS", "").split(",") if key.strip()}
 
 API_VERSION = "1.0"
 
