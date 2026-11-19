@@ -13,11 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import crud
 
-API_KEYS = {
-    "nave-api-codex-110605": "nave-list-key",
-    "nave-api-card-101707": "nave-rouge-key",
-    "nave-api-crptic-112723": "nave-quiz-key",
-}
+API_KEYS = {key.strip() for key in os.environ.get("READ_API_KEYS", "").split(",") if key.strip()}
 
 API_VERSION = "1.0"
 
