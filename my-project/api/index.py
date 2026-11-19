@@ -166,31 +166,6 @@ def database_health():
     except Exception as e:
         return {"status": "error", "detail": type(e).__name__}
 
-@app.get("/health/db/query")
-def database_query():
-    try:
-        from db import connect
-        with connect() as conn:
-            row = conn.execute(
-                "SELECT current_database() AS database, current_user AS connected_as, count(*) AS row_count FROM prehis_creat"
-            ).fetchone()
-        return {"status": "ok", **row}
-    except Exception as e:
-        return {"status": "error", "detail": type(e).__name__}
-
-@app.get("/health/db/records")
-def database_records():
-    try:
-        from db import connect
-        with connect() as conn:
-            count = conn.execute("SELECT count(*) AS n FROM prehis_creat").fetchone()["n"]
-            rows = conn.execute(
-                "SELECT id, name, period, diet FROM prehis_creat ORDER BY id LIMIT 5"
-            ).fetchall()
-        return {"status": "ok", "row_count": count, "first_five": rows}
-    except Exception as e:
-        return {"status": "error", "detail": type(e).__name__}
-
 # HOME
 @app.get("/api/v1/")
 def home():
