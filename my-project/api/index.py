@@ -49,12 +49,12 @@ class PrehistoricCreature(BaseModel):
     height: str = Field(min_length=1)
     extinction: str = Field(min_length=1)
 
-# Allowed values for the create and update models and the list filters
+# ALLOWED VALUES
 Period = Literal["Cambrian", "Ordovician", "Silurian", "Devonian", "Carboniferous", "Permian", "Triassic", "Jurassic", "Cretaceous", "Paleogene", "Neogene", "Quaternary"]
 Diet = Literal["Carnivore", "Herbivore", "Omnivore", "Piscivore", "Insectivore", "Filter Feeder"]
 Habitat = Literal["Terrestrial", "Amphibious", "Aquatic", "Aerial", "Fossorial", "Arboreal"]
 
-# Body for creating a record (no id, the database assigns it)
+# CREATE MODEL
 class PrehistoricCreatureCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
@@ -73,7 +73,7 @@ class PrehistoricCreatureCreate(BaseModel):
     height: str = Field(min_length=1, max_length=50)
     extinction: str = Field(min_length=1, max_length=255)
 
-# Body for a partial update (send only the fields to change)
+# UPDATE MODEL
 class PrehistoricCreatureUpdate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
@@ -92,12 +92,12 @@ class PrehistoricCreatureUpdate(BaseModel):
     height: Optional[str] = Field(default=None, min_length=1, max_length=50)
     extinction: Optional[str] = Field(default=None, min_length=1, max_length=255)
 
-# API KEY Authentication
+# API KEY AUTHENTICATION
 def is_admin_key(x_api_key: Optional[str]):
     admin_key = os.environ.get("ADMIN_API_KEY")
     return bool(x_api_key and admin_key and secrets.compare_digest(x_api_key.encode(), admin_key.encode()))
 
-# Read access: any website key or the admin key
+# READ ACCESS
 def verify_api_key(x_api_key: Optional[str] = Header(default=None)):
     if x_api_key not in API_KEYS and not is_admin_key(x_api_key):
         raise HTTPException(
@@ -106,7 +106,7 @@ def verify_api_key(x_api_key: Optional[str] = Header(default=None)):
         )
     return True
 
-# Write access (create, update, delete): admin key only
+# ADMIN REQUIRED (create, update, delete)
 def verify_admin_key(x_api_key: Optional[str] = Header(default=None)):
     if is_admin_key(x_api_key):
         return True
@@ -120,7 +120,7 @@ def verify_admin_key(x_api_key: Optional[str] = Header(default=None)):
         detail="Invalid or missing API key."
     )
 
-#Error Handling 
+#ERROR HANDLING
 @app.exception_handler(psycopg.OperationalError)
 def database_unavailable(request, exc):
     return JSONResponse(
@@ -162,8 +162,12 @@ def database_health():
     except Exception as e:
         return {"status": "error", "detail": type(e).__name__}
 
-# HOME
+@app.get("/api/v1/admin/check", dependencies=[Depends(verify_admin_key)])
+def admin_check():
+    return {"status": "ok", "role": "admin"}
 @app.get("/api/v1/")
+
+# HOME
 def home():
     return {
         "message": "Welcome to the DinoBase API!",
@@ -175,7 +179,7 @@ def home():
     }
 
 
-# GET ALL DINOSAURS (optional ?period= ?diet= ?habitat= filters)
+# GET ALL DINOSAURS
 @app.get("/api/v1/dinosaurs", dependencies=[Depends(verify_api_key)])
 def get_dinosaurs(
     period: Optional[Period] = None,
@@ -191,7 +195,7 @@ def get_dinosaurs(
     }
 
 
-# SEARCH DINOSAURS — must stay declared before /dinosaurs/{id}
+# SEARCH DINOSAURS 
 @app.get("/api/v1/dinosaurs/search", dependencies=[Depends(verify_api_key)])
 def search_dinosaurs(q: str = Query(..., min_length=1)):
     from db import connect
